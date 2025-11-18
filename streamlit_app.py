@@ -325,54 +325,52 @@ def handle_stream_response(user_message: str):
         assistant_parts = {}
         tool_calls = []
         
-        # Create placeholder for streaming
-        with st.chat_message("assistant"):
-            reasoning_placeholder = st.empty()
-            assistant_placeholder = st.empty()
+        # Create placeholders for streaming
+        reasoning_container = st.empty()
+        assistant_container = st.empty()
+        
+        # Stream responses
+        for chunk in letta_service.send_message_stream(user_message, stream_tokens=True):
+            chunk_type = chunk.get('type')
             
-            # Stream responses
-            for chunk in letta_service.send_message_stream(user_message, stream_tokens=True):
-                chunk_type = chunk.get('type')
+            if chunk_type == 'reasoning':
+                # Accumulate reasoning
+                msg_id = chunk.get('message_id', 'default')
+                content = chunk.get('content', '')
+                reasoning_parts[msg_id] = content
                 
-                if chunk_type == 'reasoning':
-                    # Accumulate reasoning
-                    msg_id = chunk.get('message_id', 'default')
-                    content = chunk.get('content', '')
-                    reasoning_parts[msg_id] = content
-                    
-                    # Display reasoning in italic
-                    full_reasoning = ' '.join(reasoning_parts.values())
-                    reasoning_placeholder.markdown(f"""
-                    <div class="reasoning-message">
-                        <strong>💭 Thinking:</strong> {full_reasoning}
-                    </div>
-                    """, unsafe_allow_html=True)
+                # Display reasoning in italic ONLY - separate from message
+                full_reasoning = ' '.join(reasoning_parts.values())
+                reasoning_container.markdown(f"""
+                <div class="reasoning-message">
+                    <em>💭 {full_reasoning}</em>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            elif chunk_type == 'assistant':
+                # Accumulate assistant message
+                msg_id = chunk.get('message_id', 'default')
+                content = chunk.get('content', '')
+                assistant_parts[msg_id] = content
                 
-                elif chunk_type == 'assistant':
-                    # Accumulate assistant message
-                    msg_id = chunk.get('message_id', 'default')
-                    content = chunk.get('content', '')
-                    assistant_parts[msg_id] = content
-                    
-                    # Display assistant message
-                    full_assistant = ' '.join(assistant_parts.values())
-                    assistant_placeholder.markdown(
-                        f'<div class="assistant-message">{full_assistant}</div>', 
-                        unsafe_allow_html=True
-                    )
-                
-                elif chunk_type == 'tool_call':
-                    tool_name = chunk.get('tool_name', 'unknown')
-                    tool_calls.append(tool_name)
-                    st.markdown(f"""
-                    <div class="tool-call">
-                        🔧 <strong>Calling tool:</strong> {tool_name}
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                elif chunk_type == 'error':
-                    st.error(f"❌ {chunk.get('content', 'Unknown error')}")
-                    return None
+                # Display assistant message in chat bubble - separate from reasoning
+                full_assistant = ' '.join(assistant_parts.values())
+                with assistant_container:
+                    with st.chat_message("assistant"):
+                        st.write(full_assistant)
+            
+            elif chunk_type == 'tool_call':
+                tool_name = chunk.get('tool_name', 'unknown')
+                tool_calls.append(tool_name)
+                st.markdown(f"""
+                <div class="tool-call">
+                    🔧 <strong>Calling tool:</strong> {tool_name}
+                </div>
+                """, unsafe_allow_html=True)
+            
+            elif chunk_type == 'error':
+                st.error(f"❌ {chunk.get('content', 'Unknown error')}")
+                return None
         
         # Store complete message
         full_reasoning = ' '.join(reasoning_parts.values())
