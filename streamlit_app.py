@@ -325,7 +325,7 @@ def render_message(message):
 def handle_stream_response(user_message: str):
     """Handle streaming response from Letta"""
     try:
-        # Track message components
+        # Track message components - keep reasoning and assistant SEPARATE
         reasoning_parts = {}
         assistant_parts = {}
         tool_calls = []
@@ -339,30 +339,32 @@ def handle_stream_response(user_message: str):
             chunk_type = chunk.get('type')
             
             if chunk_type == 'reasoning':
-                # Accumulate reasoning
+                # Accumulate reasoning - keep SEPARATE from assistant
                 msg_id = chunk.get('message_id', 'default')
                 content = chunk.get('content', '')
                 reasoning_parts[msg_id] = content
                 
                 # Display reasoning in italic ONLY - separate from message
                 full_reasoning = ' '.join(reasoning_parts.values())
-                reasoning_container.markdown(f"""
-                <div class="reasoning-message">
-                    <em>💭 {full_reasoning}</em>
-                </div>
-                """, unsafe_allow_html=True)
+                if full_reasoning.strip():
+                    reasoning_container.markdown(f"""
+                    <div class="reasoning-message">
+                        <em>💭 {full_reasoning}</em>
+                    </div>
+                    """, unsafe_allow_html=True)
             
             elif chunk_type == 'assistant':
-                # Accumulate assistant message
+                # Accumulate ONLY assistant message - NO reasoning
                 msg_id = chunk.get('message_id', 'default')
                 content = chunk.get('content', '')
                 assistant_parts[msg_id] = content
                 
-                # Display assistant message in chat bubble - separate from reasoning
+                # Display ONLY assistant message - separate from reasoning
                 full_assistant = ' '.join(assistant_parts.values())
-                with assistant_container:
-                    with st.chat_message("assistant"):
-                        st.write(full_assistant)
+                if full_assistant.strip():
+                    with assistant_container:
+                        with st.chat_message("assistant"):
+                            st.write(full_assistant)
             
             elif chunk_type == 'tool_call':
                 tool_name = chunk.get('tool_name', 'unknown')
@@ -377,14 +379,15 @@ def handle_stream_response(user_message: str):
                 st.error(f"❌ {chunk.get('content', 'Unknown error')}")
                 return None
         
-        # Store complete message
-        full_reasoning = ' '.join(reasoning_parts.values())
-        full_assistant = ' '.join(assistant_parts.values())
+        # Store complete message with reasoning and content SEPARATE
+        full_reasoning = ' '.join(reasoning_parts.values()).strip()
+        full_assistant = ' '.join(assistant_parts.values()).strip()
         
+        # Return message with ONLY assistant content, reasoning stored separately
         return {
             'role': 'assistant',
-            'content': full_assistant,
-            'reasoning': full_reasoning,
+            'content': full_assistant,  # ONLY assistant message
+            'reasoning': full_reasoning,  # ONLY reasoning - displayed separately
             'tool_calls': tool_calls
         }
     
