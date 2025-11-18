@@ -538,19 +538,30 @@ def main():
     # Display chat history
     if len(st.session_state.messages) == 0:
         st.markdown("""
-        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <h3>👋 Welcome to TalentScout AI!</h3>
-            <p style="font-size: 1.1rem; margin: 1rem 0;">
-                I'm an AI hiring assistant powered by Letta. I'll help screen candidates by:
+        <div class="welcome-card">
+            <h3>👋 Welcome to TalentScout AI</h3>
+            <p style="margin: 1.5rem 0;">
+                An intelligent hiring assistant that streamlines candidate screening with conversational AI
             </p>
-            <ul style="font-size: 1rem; line-height: 1.8;">
-                <li>📝 Collecting essential information</li>
-                <li>💻 Understanding technical expertise</li>
-                <li>🎯 Asking relevant questions</li>
-                <li>🧠 Remembering context throughout our conversation</li>
-            </ul>
-            <p style="font-size: 1.1rem; margin-top: 1.5rem;">
-                <strong>✨ Ready to begin? Just type your message below!</strong>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
+                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📝</div>
+                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Information Gathering</div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">Collect candidate details naturally</div>
+                </div>
+                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💻</div>
+                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Tech Assessment</div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">Evaluate technical expertise</div>
+                </div>
+                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
+                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Context Memory</div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">Remembers conversation flow</div>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.95rem; color: #6e6e80;">
+                Start by introducing yourself or jump straight to the screening process
             </p>
         </div>
         """, unsafe_allow_html=True)
