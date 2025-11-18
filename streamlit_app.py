@@ -67,29 +67,29 @@ st.markdown("""
         font-weight: 400;
     }
     
-    /* Chat Messages - ChatGPT Style */
+    /* Chat Messages - Dark Theme */
     .stChatMessage {
         border-radius: 0 !important;
         padding: 1.5rem 1rem !important;
         margin: 0 !important;
-        border-bottom: 1px solid #f7f7f8 !important;
+        border-bottom: 1px solid #444654 !important;
         box-shadow: none !important;
         background: transparent !important;
     }
     
     /* User Message Styling */
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
-        background-color: #ffffff !important;
+        background-color: #343541 !important;
     }
     
     /* Assistant Message Styling */
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
-        background-color: #f7f7f8 !important;
+        background-color: #444654 !important;
     }
     
     /* Chat Message Content */
     .stChatMessage p {
-        color: #374151 !important;
+        color: #ececf1 !important;
         font-size: 1rem;
         line-height: 1.75;
         font-weight: 400;
@@ -100,23 +100,23 @@ st.markdown("""
     .stChatMessage span,
     .stChatMessage p,
     .stChatMessage a {
-        color: #374151 !important;
+        color: #ececf1 !important;
     }
     
     /* Override any inherited styles */
     [data-testid="stChatMessage"] * {
-        color: #374151 !important;
+        color: #ececf1 !important;
     }
     
     /* Ensure markdown content is visible */
     .stMarkdown {
-        color: #374151 !important;
+        color: #ececf1 !important;
     }
     
     .stMarkdown p,
     .stMarkdown div,
     .stMarkdown span {
-        color: #374151 !important;
+        color: #ececf1 !important;
     }
     
     /* Avatar Styling */
