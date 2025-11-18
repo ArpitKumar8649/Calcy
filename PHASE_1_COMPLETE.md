@@ -55,7 +55,7 @@
 ## 🌐 Preview Access
 
 Your Streamlit chatbot is now accessible at:
-**https://code-review-letta.preview.emergentagent.com**
+**https://project-decoder-1.preview.emergentagent.com**
 
 (Your Emergent preview URL - Streamlit is running on port 3000)
 
