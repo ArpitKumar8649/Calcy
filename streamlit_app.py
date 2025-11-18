@@ -275,21 +275,33 @@ st.markdown("""
         }
     }
     
-    /* Tool Call Badge */
+    /* Tool Call Badge - Dark Theme */
     .tool-call {
-        background: #eff6ff;
+        background: #2d2d30;
         padding: 0.625rem 0.875rem;
         border-radius: 6px;
-        border-left: 3px solid #3b82f6;
+        border-left: 3px solid #60a5fa;
         margin: 0.5rem 0;
         font-size: 0.875rem;
-        color: #1e40af;
+        color: #93c5fd;
     }
     
     /* Chat Input Styling */
     .stChatInputContainer {
-        border-top: 1px solid #f7f7f8;
+        border-top: 1px solid #444654;
         padding: 1rem 0;
+        background: #343541;
+    }
+    
+    /* Input field */
+    .stChatInput input {
+        background: #40414f !important;
+        color: #ececf1 !important;
+        border: 1px solid #565869 !important;
+    }
+    
+    .stChatInput input::placeholder {
+        color: #8e8ea0 !important;
     }
     
     /* Button Styling */
