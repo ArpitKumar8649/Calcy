@@ -1,5 +1,5 @@
 """Service for interacting with Letta Agent with streaming support"""
-from letta import Letta
+from letta_client import Letta
 from typing import Optional, Dict, List, Generator, Any
 import os
 from config.settings import settings
