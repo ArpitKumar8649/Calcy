@@ -290,7 +290,7 @@ def render_sidebar():
 
 
 def render_message(message):
-    """Render a single message"""
+    """Render a single message - for historical display"""
     role = message.get('role')
     content = message.get('content', '')
     
@@ -299,7 +299,9 @@ def render_message(message):
             st.write(content)
     
     elif role == 'assistant':
-        # Show reasoning ONLY in italic - separate from assistant message
+        # For historical messages, show reasoning in italic ONLY if present
+        # Reasoning was already shown during streaming, so we include it here
+        # for completeness when scrolling through history
         if message.get('reasoning') and message['reasoning'].strip():
             st.markdown(f"""
             <div class="reasoning-message">
@@ -307,7 +309,7 @@ def render_message(message):
             </div>
             """, unsafe_allow_html=True)
         
-        # Show ONLY assistant message in chat bubble - NO reasoning mixed in
+        # Show ONLY assistant message content - NO reasoning text mixed in
         if content and content.strip():
             with st.chat_message("assistant"):
                 st.write(content)
