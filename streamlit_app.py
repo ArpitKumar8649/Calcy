@@ -55,13 +55,13 @@ st.markdown("""
         font-weight: 600;
         text-align: center;
         padding: 1rem 0 0.5rem 0;
-        color: #202123;
+        color: #ececf1;
         letter-spacing: -0.3px;
     }
     
     .sub-header {
         font-size: 0.875rem;
-        color: #6e6e80;
+        color: #9ca3af;
         text-align: center;
         margin-bottom: 1rem;
         font-weight: 400;
