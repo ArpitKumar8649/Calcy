@@ -89,10 +89,18 @@ st.markdown("""
     
     /* Chat Message Content */
     .stChatMessage p {
-        color: #374151;
+        color: #374151 !important;
         font-size: 1rem;
         line-height: 1.75;
         font-weight: 400;
+    }
+    
+    /* Force all text in messages to be visible */
+    .stChatMessage div,
+    .stChatMessage span,
+    .stChatMessage p,
+    .stChatMessage a {
+        color: #374151 !important;
     }
     
     /* Avatar Styling */
