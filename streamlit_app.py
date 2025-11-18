@@ -324,15 +324,15 @@ def connect_to_letta():
 
 
 def render_sidebar():
-    """Render sidebar"""
+    """Render sidebar - ChatGPT style"""
     with st.sidebar:
-        st.markdown('<p class="sidebar-header">📋 Agent Status</p>', unsafe_allow_html=True)
+        st.markdown('<p class="sidebar-header">🤖 Agent Status</p>', unsafe_allow_html=True)
         
         # Connection status
         if st.session_state.letta_connected:
             st.markdown("""
             <div class="connection-status status-connected">
-                <strong>✅ Letta Agent Connected</strong>
+                <strong>✓ AI Agent Connected</strong>
             </div>
             """, unsafe_allow_html=True)
             
@@ -341,43 +341,48 @@ def render_sidebar():
                 st.markdown(f"""
                 <div class="info-card">
                     <p class="info-label">Agent ID</p>
-                    <p class="info-value" style="font-size: 0.85rem;">{info.get('id', 'N/A')}</p>
+                    <p class="info-value" style="font-size: 0.75rem; word-break: break-all;">{info.get('id', 'N/A')[:36]}...</p>
                 </div>
                 <div class="info-card">
                     <p class="info-label">Model</p>
                     <p class="info-value">{info.get('model', 'N/A')}</p>
                 </div>
+                <div class="info-card">
+                    <p class="info-label">Agent Name</p>
+                    <p class="info-value">{info.get('name', 'N/A')}</p>
+                </div>
                 """, unsafe_allow_html=True)
         else:
             st.markdown("""
             <div class="connection-status status-error">
-                <strong>⚠️ Not Connected</strong>
+                <strong>⚠ Connection Error</strong>
             </div>
             """, unsafe_allow_html=True)
         
-        st.markdown("---")
+        st.markdown('<div style="margin: 1.5rem 0; border-top: 1px solid #4d4d4f;"></div>', unsafe_allow_html=True)
         
         # Conversation stats
-        st.subheader("💬 Conversation Stats")
+        st.markdown('<p class="sidebar-header">💬 Conversation</p>', unsafe_allow_html=True)
         message_count = len([m for m in st.session_state.messages if m.get('role') == 'user'])
         st.metric("Messages Sent", message_count)
         
-        st.markdown("---")
+        st.markdown('<div style="margin: 1.5rem 0; border-top: 1px solid #4d4d4f;"></div>', unsafe_allow_html=True)
         
         # About section
-        st.subheader("ℹ️ About")
+        st.markdown('<p class="sidebar-header">ℹ️ Capabilities</p>', unsafe_allow_html=True)
         st.markdown("""
-        This AI hiring assistant:
-        - 📝 Collects candidate information
-        - 💻 Assesses technical skills  
-        - 🎯 Generates relevant questions
-        - 🤖 Uses Letta for stateful memory
-        """)
+        <div style="font-size: 0.875rem; line-height: 1.6; color: #ececf1;">
+        • Candidate information gathering<br>
+        • Technical skills assessment<br>
+        • Context-aware conversations<br>
+        • Real-time streaming responses
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("---")
+        st.markdown('<div style="margin: 1.5rem 0; border-top: 1px solid #4d4d4f;"></div>', unsafe_allow_html=True)
         
         # Reset button
-        if st.button("🔄 Reset Conversation", use_container_width=True):
+        if st.button("🔄 New Conversation", use_container_width=True):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
