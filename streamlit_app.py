@@ -537,8 +537,7 @@ def main():
     # Render sidebar
     render_sidebar()
     
-    # Main chat interface
-    st.subheader("💬 Chat Interface")
+    # Main chat interface - no subtitle for cleaner look
     
     # Display chat history
     if len(st.session_state.messages) == 0:
