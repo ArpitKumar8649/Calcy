@@ -548,38 +548,8 @@ def main():
     # Main chat interface - no subtitle for cleaner look
     
     # Display chat history
-    if len(st.session_state.messages) == 0:
-        st.markdown("""
-        <div class="welcome-card">
-            <h3>👋 Welcome to TalentScout AI</h3>
-            <p style="margin: 1.5rem 0;">
-                An intelligent hiring assistant that streamlines candidate screening with conversational AI
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem;">
-                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📝</div>
-                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Information Gathering</div>
-                    <div style="font-size: 0.875rem; color: #6b7280;">Collect candidate details naturally</div>
-                </div>
-                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">💻</div>
-                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Tech Assessment</div>
-                    <div style="font-size: 0.875rem; color: #6b7280;">Evaluate technical expertise</div>
-                </div>
-                <div style="background: white; padding: 1.25rem; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
-                    <div style="font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Context Memory</div>
-                    <div style="font-size: 0.875rem; color: #6b7280;">Remembers conversation flow</div>
-                </div>
-            </div>
-            <p style="margin-top: 2rem; font-size: 0.95rem; color: #6e6e80;">
-                Start by introducing yourself or jump straight to the screening process
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        for message in st.session_state.messages:
-            render_message(message)
+    for message in st.session_state.messages:
+        render_message(message)
     
     # Chat input
     if st.session_state.letta_connected:
