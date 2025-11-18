@@ -515,16 +515,15 @@ def main():
     # Initialize
     initialize_session_state()
     
-    # Header
+    # Header - ChatGPT Style
     st.markdown(
-        f'<h1 class="main-header">{settings.app_icon} {settings.app_title}</h1>', 
+        f'<h1 class="main-header">{settings.app_title}</h1>', 
         unsafe_allow_html=True
     )
     st.markdown(
-        '<p class="sub-header">Powered by Letta Agent Framework with Streaming 🚀</p>',
+        '<p class="sub-header">AI-Powered Hiring Assistant with Real-Time Streaming</p>',
         unsafe_allow_html=True
     )
-    st.markdown('---')
     
     # Connect to Letta
     if not st.session_state.letta_connected:
