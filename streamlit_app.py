@@ -538,6 +538,9 @@ def handle_stream_response(user_message: str):
                     """, unsafe_allow_html=True)
             
             elif chunk_type == 'assistant':
+                # Remove thinking indicator if still showing
+                thinking_indicator.empty()
+                
                 # Accumulate assistant message
                 msg_id = chunk.get('message_id', 'default')
                 content = chunk.get('content', '')
