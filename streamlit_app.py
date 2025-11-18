@@ -451,22 +451,26 @@ def main():
     # Chat input
     if st.session_state.letta_connected:
         if prompt := st.chat_input("Type your message here...", key="user_input"):
-            # Display user message
+            # Add user message to history
             st.session_state.messages.append({
                 'role': 'user',
                 'content': prompt
             })
             
-            with st.chat_message("user"):
-                st.write(prompt)
-            
-            # Get streaming response
+            # Get streaming response (this will display reasoning and assistant message)
             response = handle_stream_response(prompt)
             
+            # Store the response WITHOUT reasoning to avoid duplication
+            # Reasoning was already displayed during streaming
             if response:
-                st.session_state.messages.append(response)
+                st.session_state.messages.append({
+                    'role': 'assistant',
+                    'content': response['content'],  # Only store assistant content
+                    'reasoning': '',  # Don't store reasoning to avoid showing twice
+                    'tool_calls': response.get('tool_calls', [])
+                })
             
-            # Rerun to show updated messages
+            # Rerun to update chat history
             st.rerun()
     else:
         st.warning("⚠️ Please wait for Letta connection to be established.")
