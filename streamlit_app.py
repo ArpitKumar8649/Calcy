@@ -499,8 +499,21 @@ def handle_stream_response(user_message: str):
         tool_calls = []
         
         # Create placeholders for streaming
+        thinking_indicator = st.empty()
         reasoning_container = st.empty()
         assistant_container = st.empty()
+        
+        # Show thinking indicator
+        thinking_indicator.markdown("""
+        <div class="thinking-indicator">
+            <div class="thinking-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span>Agent is thinking...</span>
+        </div>
+        """, unsafe_allow_html=True)
         
         # Stream responses
         for chunk in letta_service.send_message_stream(user_message, stream_tokens=True):
