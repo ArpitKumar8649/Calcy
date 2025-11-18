@@ -28,166 +28,260 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS - ChatGPT Style
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
+    /* Global Styles */
     * {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     
+    /* Main App Background - Clean White */
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: #ffffff;
     }
     
+    /* Main Content Area */
+    section[data-testid="stAppViewContainer"] {
+        background: #ffffff;
+        padding-top: 0 !important;
+    }
+    
+    /* Header Container */
     .main-header {
-        font-size: 3rem;
-        font-weight: 800;
+        font-size: 1.5rem;
+        font-weight: 600;
         text-align: center;
-        padding: 2rem 0 1rem 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.5px;
+        padding: 1rem 0 0.5rem 0;
+        color: #202123;
+        letter-spacing: -0.3px;
     }
     
     .sub-header {
-        font-size: 1.1rem;
-        color: #64748b;
+        font-size: 0.875rem;
+        color: #6e6e80;
         text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 500;
+        margin-bottom: 1rem;
+        font-weight: 400;
     }
     
+    /* Chat Messages - ChatGPT Style */
     .stChatMessage {
-        border-radius: 12px !important;
-        padding: 1.2rem !important;
-        margin: 0.8rem 0 !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+        border-radius: 0 !important;
+        padding: 1.5rem 1rem !important;
+        margin: 0 !important;
+        border-bottom: 1px solid #f7f7f8 !important;
+        box-shadow: none !important;
+        background: transparent !important;
     }
     
+    /* User Message Styling */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+        background-color: #ffffff !important;
+    }
+    
+    /* Assistant Message Styling */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
+        background-color: #f7f7f8 !important;
+    }
+    
+    /* Chat Message Content */
+    .stChatMessage p {
+        color: #374151;
+        font-size: 1rem;
+        line-height: 1.75;
+        font-weight: 400;
+    }
+    
+    /* Avatar Styling */
+    [data-testid="chatAvatarIcon-user"] {
+        background: #19c37d !important;
+    }
+    
+    [data-testid="chatAvatarIcon-assistant"] {
+        background: #ab68ff !important;
+    }
+    
+    /* Sidebar Styling - Dark Mode */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-        border-right: 1px solid #e2e8f0;
+        background: #202123;
+        border-right: 1px solid #2d2d30;
+    }
+    
+    [data-testid="stSidebar"] * {
+        color: #ececf1 !important;
+    }
+    
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {
+        color: #ffffff !important;
     }
     
     .sidebar-header {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid #667eea;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff !important;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #4d4d4f;
     }
     
+    /* Info Cards in Sidebar */
     .info-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        border-left: 4px solid #667eea;
+        background: #2d2d30;
+        border-radius: 8px;
+        padding: 0.875rem;
+        margin: 0.75rem 0;
+        border: 1px solid #4d4d4f;
     }
     
     .info-label {
-        font-size: 0.85rem;
-        color: #64748b;
-        font-weight: 600;
-        margin-bottom: 0.3rem;
+        font-size: 0.75rem;
+        color: #8e8ea0 !important;
+        font-weight: 500;
+        margin-bottom: 0.375rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
     }
     
     .info-value {
-        font-size: 1rem;
-        color: #1e293b;
-        font-weight: 500;
+        font-size: 0.875rem;
+        color: #ececf1 !important;
+        font-weight: 400;
     }
     
-    .progress-container {
-        width: 100%;
-        height: 12px;
-        background: #e2e8f0;
+    /* Connection Status Badge */
+    .connection-status {
+        padding: 0.75rem;
         border-radius: 6px;
-        overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        margin: 0.75rem 0;
+        font-size: 0.875rem;
     }
     
-    .progress-bar {
-        height: 100%;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 6px;
-        transition: width 0.5s ease;
-        animation: shimmer 2s infinite;
+    .status-connected {
+        background: #1a7f5a;
+        border: 1px solid #2d9d6e;
+        color: #d1fae5 !important;
     }
     
-    @keyframes shimmer {
-        0% { opacity: 1; }
-        50% { opacity: 0.8; }
-        100% { opacity: 1; }
+    .status-error {
+        background: #8b1e1e;
+        border: 1px solid #dc2626;
+        color: #fee2e2 !important;
     }
     
-    .status-badge {
-        display: inline-block;
-        padding: 0.4rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin: 0.3rem;
-    }
-    
-    .badge-pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
-    
+    /* Reasoning Message - Subtle Italic */
     .reasoning-message {
         font-style: italic;
-        color: #6b7280;
-        background: #f9fafb;
-        padding: 0.8rem 1rem;
-        border-radius: 8px;
-        border-left: 3px solid #9ca3af;
-        margin: 0.5rem 0 1rem 0;
-        font-size: 0.95rem;
-    }
-    
-    .reasoning-message em {
-        font-style: italic;
-    }
-    
-    .assistant-message {
-        color: #1f2937;
-        line-height: 1.6;
-    }
-    
-    .tool-call {
-        background: #dbeafe;
-        padding: 0.6rem;
-        border-radius: 8px;
-        border-left: 3px solid #3b82f6;
+        color: #6e6e80;
+        background: #f7f7f8;
+        padding: 0.875rem 1rem;
+        border-radius: 6px;
+        border-left: 3px solid #d1d5db;
         margin: 0.5rem 0;
         font-size: 0.9rem;
     }
     
-    .connection-status {
-        padding: 1rem;
-        border-radius: 8px;
+    .reasoning-message em {
+        font-style: italic;
+        color: #6e6e80;
+    }
+    
+    /* Tool Call Badge */
+    .tool-call {
+        background: #eff6ff;
+        padding: 0.625rem 0.875rem;
+        border-radius: 6px;
+        border-left: 3px solid #3b82f6;
+        margin: 0.5rem 0;
+        font-size: 0.875rem;
+        color: #1e40af;
+    }
+    
+    /* Chat Input Styling */
+    .stChatInputContainer {
+        border-top: 1px solid #f7f7f8;
+        padding: 1rem 0;
+    }
+    
+    /* Button Styling */
+    .stButton button {
+        background: #10a37f;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.625rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .stButton button:hover {
+        background: #1a7f5a;
+        box-shadow: 0 2px 8px rgba(16, 163, 127, 0.3);
+    }
+    
+    /* Metrics */
+    [data-testid="stMetricValue"] {
+        color: #ececf1 !important;
+        font-size: 1.5rem !important;
+    }
+    
+    /* Remove Streamlit Branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+    }
+    
+    /* Welcome Card */
+    .welcome-card {
+        background: #f7f7f8;
+        padding: 2rem;
+        border-radius: 12px;
+        margin: 2rem auto;
+        max-width: 800px;
+        text-align: center;
+    }
+    
+    .welcome-card h3 {
+        color: #202123;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .welcome-card p {
+        color: #6e6e80;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .welcome-card ul {
+        text-align: left;
+        color: #374151;
+        font-size: 0.95rem;
+        line-height: 1.8;
         margin: 1rem 0;
-    }
-    
-    .status-connected {
-        background: #d1fae5;
-        border: 1px solid #10b981;
-        color: #065f46;
-    }
-    
-    .status-error {
-        background: #fee2e2;
-        border: 1px solid #ef4444;
-        color: #991b1b;
     }
 </style>
 """, unsafe_allow_html=True)
