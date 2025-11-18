@@ -197,21 +197,82 @@ st.markdown("""
         color: #fee2e2 !important;
     }
     
-    /* Reasoning Message - Subtle Italic */
+    /* Reasoning Message - Dark Theme */
     .reasoning-message {
         font-style: italic;
-        color: #6e6e80;
-        background: #f7f7f8;
+        color: #9ca3af;
+        background: #2d2d30;
         padding: 0.875rem 1rem;
         border-radius: 6px;
-        border-left: 3px solid #d1d5db;
+        border-left: 3px solid #6b7280;
         margin: 0.5rem 0;
         font-size: 0.9rem;
     }
     
     .reasoning-message em {
         font-style: italic;
-        color: #6e6e80;
+        color: #9ca3af;
+    }
+    
+    /* Thinking Indicator with Shimmer Animation */
+    .thinking-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: #444654;
+        border-radius: 8px;
+        margin: 1rem 0;
+        color: #9ca3af;
+        font-size: 0.95rem;
+        animation: shimmer 2s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+        0%, 100% {
+            opacity: 0.5;
+            transform: translateY(0px);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+    }
+    
+    .thinking-dots {
+        display: inline-flex;
+        gap: 0.25rem;
+    }
+    
+    .thinking-dots span {
+        width: 6px;
+        height: 6px;
+        background: #9ca3af;
+        border-radius: 50%;
+        animation: bounce 1.4s ease-in-out infinite;
+    }
+    
+    .thinking-dots span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    
+    .thinking-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .thinking-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes bounce {
+        0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.5;
+        }
+        30% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
     }
     
     /* Tool Call Badge */
