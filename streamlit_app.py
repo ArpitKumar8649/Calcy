@@ -842,8 +842,8 @@ def main():
                     'tool_calls': response.get('tool_calls', [])
                 })
             
-            # Save messages to persistent storage
-            save_messages_to_file(st.session_state.messages)
+            # Save messages to IndexedDB
+            save_messages_to_indexeddb(st.session_state.messages)
             
             # Rerun to update chat history
             st.rerun()
