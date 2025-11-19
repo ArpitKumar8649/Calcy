@@ -447,15 +447,6 @@ def render_message(message):
         if content and content.strip():
             with st.chat_message("assistant"):
                 st.write(content)
-        
-        # Show tool calls if present
-        if message.get('tool_calls') and len(message['tool_calls']) > 0:
-            for tool_call in message['tool_calls']:
-                st.markdown(f"""
-                <div class="tool-call">
-                    🔧 <strong>Tool:</strong> {tool_call}
-                </div>
-                """, unsafe_allow_html=True)
 
 
 def handle_stream_response(user_message: str):
