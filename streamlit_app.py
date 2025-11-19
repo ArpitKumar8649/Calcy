@@ -391,45 +391,54 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def load_messages_from_storage():
-    """Load messages from browser localStorage using JavaScript"""
-    load_script = """
-    <script>
-    // Get messages from localStorage
-    const messages = localStorage.getItem('talentscout_messages');
-    const messagesData = messages ? JSON.parse(messages) : [];
+def get_session_file_path():
+    """Get path to session persistence file"""
+    session_dir = Path("/tmp/talentscout_sessions")
+    session_dir.mkdir(exist_ok=True)
     
-    // Send to Streamlit
-    window.parent.postMessage({
-        type: 'streamlit:setComponentValue',
-        data: messagesData
-    }, '*');
-    </script>
-    """
-    return html(load_script, height=0)
+    # Use Streamlit's session ID if available, otherwise use a cookie-based ID
+    session_id = st.session_state.get('session_id')
+    if not session_id:
+        # Generate a new session ID
+        import hashlib
+        import uuid
+        session_id = hashlib.md5(str(uuid.uuid4()).encode()).hexdigest()
+        st.session_state.session_id = session_id
+    
+    return session_dir / f"session_{session_id}.json"
 
 
-def save_messages_to_storage(messages):
-    """Save messages to browser localStorage using JavaScript"""
-    messages_json = json.dumps(messages)
-    save_script = f"""
-    <script>
-    // Save messages to localStorage
-    const messages = {messages_json};
-    localStorage.setItem('talentscout_messages', JSON.stringify(messages));
-    </script>
-    """
-    html(save_script, height=0)
+def load_messages_from_file():
+    """Load messages from file storage"""
+    try:
+        file_path = get_session_file_path()
+        if file_path.exists():
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                return data.get('messages', [])
+    except Exception as e:
+        print(f"Error loading messages: {e}")
+    return []
 
 
-def clear_storage():
-    """Clear messages from browser localStorage"""
-    clear_script = """
-    <script>
-    localStorage.removeItem('talentscout_messages');
-    </script>
-    """
-    html(clear_script, height=0)
+def save_messages_to_file(messages):
+    """Save messages to file storage"""
+    try:
+        file_path = get_session_file_path()
+        with open(file_path, 'w') as f:
+            json.dump({'messages': messages, 'timestamp': datetime.now().isoformat()}, f)
+    except Exception as e:
+        print(f"Error saving messages: {e}")
+
+
+def clear_session_file():
+    """Clear session file"""
+    try:
+        file_path = get_session_file_path()
+        if file_path.exists():
+            file_path.unlink()
+    except Exception as e:
+        print(f"Error clearing session: {e}")
 
 
 def initialize_session_state():
