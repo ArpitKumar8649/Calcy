@@ -49,25 +49,25 @@ st.markdown("""
         padding-top: 0 !important;
     }
     
-    /* Header Container */
+    /* Header Container - Responsive */
     .main-header {
-        font-size: 1.5rem;
+        font-size: clamp(1.25rem, 4vw, 2rem);
         font-weight: 600;
         text-align: center;
-        padding: 1rem 0 0.5rem 0;
+        padding: 1.5rem 1rem 1rem 1rem;
         color: #ececf1;
         letter-spacing: -0.3px;
     }
     
-    /* Typing Effect for TalentScout */
+    /* Typing Effect for TalentScout - Runs Once */
     .typing-text {
         display: inline-block;
         overflow: hidden;
         border-right: 3px solid #10a37f;
         white-space: nowrap;
-        animation: typing 3s steps(12, end) 1s 1 normal both,
-                   blink-caret 0.75s step-end infinite;
-        animation-delay: 0s, 0s;
+        animation: typing 2s steps(12, end) 0.5s forwards,
+                   blink-caret 0.75s step-end 0s 3;
+        width: 0;
     }
     
     @keyframes typing {
@@ -76,28 +76,29 @@ st.markdown("""
         }
         to {
             width: 100%;
+            border-right-color: transparent;
         }
     }
     
     @keyframes blink-caret {
         from, to {
-            border-color: transparent;
+            border-right-color: transparent;
         }
         50% {
-            border-color: #10a37f;
+            border-right-color: #10a37f;
         }
     }
     
-    /* Stop blinking after typing completes */
-    @keyframes stop-blink {
-        to {
-            border-color: transparent;
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 1.25rem;
+            padding: 1rem 0.5rem 0.75rem 0.5rem;
         }
-    }
-    
-    .typing-text.typing-complete {
-        border-right: none;
-        animation: none;
+        
+        .typing-text {
+            border-right-width: 2px;
+        }
     }
     
     .sub-header {
