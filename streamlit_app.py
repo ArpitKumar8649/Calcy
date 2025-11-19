@@ -211,7 +211,7 @@ st.markdown("""
         gap: 0.5rem;
     }
     
-    /* Export Buttons */
+    /* Export and Action Buttons */
     .stButton button {
         font-size: 0.875rem;
         padding: 0.5rem 1rem;
@@ -227,10 +227,32 @@ st.markdown("""
         background: #0d8a6a;
     }
     
+    /* Download buttons */
+    .stDownloadButton button {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        background: #10a37f;
+        border: none;
+        color: white;
+        border-radius: 6px;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    
+    .stDownloadButton button:hover {
+        background: #0d8a6a;
+    }
+    
     @media (max-width: 768px) {
         .export-container {
             top: 10px;
             right: 10px;
+        }
+        
+        .stButton button,
+        .stDownloadButton button {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
         }
     }
     
