@@ -121,7 +121,7 @@ st.markdown("""
         padding: 0 1rem;
         position: sticky;
         top: 70px;
-        background: #343541;
+        background: #1a1a1a;
         z-index: 999;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
