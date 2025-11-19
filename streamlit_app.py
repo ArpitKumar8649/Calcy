@@ -59,7 +59,7 @@ st.markdown("""
         letter-spacing: -0.3px;
         position: sticky;
         top: 0;
-        background: #343541;
+        background: #1a1a1a;
         z-index: 1000;
         border-bottom: 1px solid #444654;
     }
