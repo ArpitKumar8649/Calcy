@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 import os
 import sys
 import time
+from datetime import datetime
+import io
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
