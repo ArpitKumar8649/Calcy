@@ -323,7 +323,7 @@ st.markdown("""
     .stChatInputContainer {
         border-top: 1px solid #444654;
         padding: 1rem 0;
-        background: #343541;
+        background: #1a1a1a;
     }
     
     /* Input field */
