@@ -10,6 +10,8 @@ import sys
 import time
 from datetime import datetime
 import io
+import json
+from streamlit.components.v1 import html
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
