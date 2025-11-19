@@ -410,6 +410,64 @@ def initialize_session_state():
         st.session_state.agent_info = None
 
 
+def export_chat_as_txt():
+    """Export chat history as TXT file"""
+    if not st.session_state.messages:
+        return None
+    
+    # Create text content
+    content = f"TalentScout AI Hiring Assistant - Chat Export\n"
+    content += f"Exported on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    content += "=" * 80 + "\n\n"
+    
+    for idx, message in enumerate(st.session_state.messages, 1):
+        role = message.get('role', 'unknown')
+        msg_content = message.get('content', '')
+        reasoning = message.get('reasoning', '')
+        
+        if role == 'user':
+            content += f"[User Message #{idx}]\n"
+            content += f"{msg_content}\n\n"
+        elif role == 'assistant':
+            content += f"[Assistant Response #{idx}]\n"
+            if reasoning and reasoning.strip():
+                content += f"Reasoning: {reasoning}\n"
+            content += f"{msg_content}\n\n"
+        
+        content += "-" * 80 + "\n\n"
+    
+    return content
+
+
+def export_chat_as_markdown():
+    """Export chat history as Markdown file"""
+    if not st.session_state.messages:
+        return None
+    
+    # Create markdown content
+    content = f"# TalentScout AI Hiring Assistant - Chat Export\n\n"
+    content += f"**Exported on:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    content += "---\n\n"
+    
+    for idx, message in enumerate(st.session_state.messages, 1):
+        role = message.get('role', 'unknown')
+        msg_content = message.get('content', '')
+        reasoning = message.get('reasoning', '')
+        
+        if role == 'user':
+            content += f"## 👤 User Message #{idx}\n\n"
+            content += f"{msg_content}\n\n"
+        elif role == 'assistant':
+            content += f"## 🤖 Assistant Response #{idx}\n\n"
+            if reasoning and reasoning.strip():
+                content += f"*💭 Reasoning: {reasoning}*\n\n"
+            content += f"{msg_content}\n\n"
+        
+        content += "---\n\n"
+    
+    return content
+
+
 def connect_to_letta():
     """Connect to Letta service"""
     if not st.session_state.letta_connected:
