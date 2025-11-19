@@ -528,11 +528,11 @@ def main():
     # Initialize
     initialize_session_state()
     
-    # Header - ChatGPT Style with Typing Effect on TalentScout (runs once)
+    # Header - Clean and Simple
     st.markdown(
         '''
         <h1 class="main-header">
-            <span class="typing-text">TalentScout</span>
+            <span class="app-title">TalentScout</span>
             <span> AI Hiring Assistant</span>
         </h1>
         ''', 
