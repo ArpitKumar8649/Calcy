@@ -413,108 +413,114 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-def load_messages_from_indexeddb():
-    """Load messages from browser IndexedDB and inject into hidden input"""
+def load_and_inject_messages():
+    """Load messages from IndexedDB and inject into page for detection"""
     load_script = """
-    <div id="indexeddb-loader" style="display:none;">
-        <input type="hidden" id="loaded-messages" value="" />
-    </div>
-    <script>
-    (function() {
-        const dbName = 'TalentScoutDB';
-        const storeName = 'conversations';
-        
-        // Open IndexedDB
-        const request = indexedDB.open(dbName, 1);
-        
-        request.onerror = function() {
-            console.error('Failed to open IndexedDB');
-        };
-        
-        request.onsuccess = function(event) {
-            const db = event.target.result;
-            const transaction = db.transaction([storeName], 'readonly');
-            const objectStore = transaction.objectStore(storeName);
-            const getRequest = objectStore.get('current_conversation');
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div id="message-container" style="display:none;"></div>
+        <script>
+        (function() {
+            const dbName = 'TalentScoutDB';
+            const storeName = 'conversations';
             
-            getRequest.onsuccess = function() {
-                const data = getRequest.result;
-                if (data && data.messages && data.messages.length > 0) {
-                    // Store in sessionStorage for Streamlit to access
-                    sessionStorage.setItem('talentscout_messages', JSON.stringify(data.messages));
-                    console.log('Loaded', data.messages.length, 'messages from IndexedDB');
+            // Open IndexedDB
+            const request = indexedDB.open(dbName, 1);
+            
+            request.onerror = function() {
+                console.error('Failed to open IndexedDB');
+                document.getElementById('message-container').setAttribute('data-messages', '[]');
+            };
+            
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                
+                // Check if store exists
+                if (!db.objectStoreNames.contains(storeName)) {
+                    document.getElementById('message-container').setAttribute('data-messages', '[]');
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], 'readonly');
+                const objectStore = transaction.objectStore(storeName);
+                const getRequest = objectStore.get('current_conversation');
+                
+                getRequest.onsuccess = function() {
+                    const data = getRequest.result;
+                    if (data && data.messages) {
+                        const messagesJson = JSON.stringify(data.messages);
+                        document.getElementById('message-container').setAttribute('data-messages', messagesJson);
+                        console.log('Loaded messages from IndexedDB:', data.messages.length);
+                        
+                        // Also save to localStorage as backup
+                        localStorage.setItem('talentscout_backup', messagesJson);
+                    } else {
+                        document.getElementById('message-container').setAttribute('data-messages', '[]');
+                    }
+                };
+                
+                getRequest.onerror = function() {
+                    document.getElementById('message-container').setAttribute('data-messages', '[]');
+                };
+            };
+            
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(storeName)) {
+                    db.createObjectStore(storeName);
                 }
             };
-        };
-        
-        request.onupgradeneeded = function(event) {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName);
-            }
-        };
-    })();
-    </script>
+        })();
+        </script>
+    </body>
+    </html>
     """
-    components.html(load_script, height=0)
-
-
-def check_loaded_messages():
-    """Check if messages were loaded from IndexedDB via sessionStorage"""
-    check_script = """
-    <script>
-    (function() {
-        const messages = sessionStorage.getItem('talentscout_messages');
-        if (messages) {
-            // Create a custom event to notify Streamlit
-            const event = new CustomEvent('messagesLoaded', { detail: messages });
-            window.dispatchEvent(event);
-            
-            // Clear from sessionStorage so we don't reload multiple times
-            sessionStorage.removeItem('talentscout_messages');
-            
-            // Try to pass data to parent
-            if (window.parent) {
-                window.parent.postMessage({
-                    type: 'streamlit:setComponentValue',
-                    value: messages
-                }, '*');
-            }
-        }
-    })();
-    </script>
-    """
-    result = components.html(check_script, height=0)
-    return result
+    return components.html(load_script, height=0)
 
 
 def save_messages_to_indexeddb(messages):
     """Save messages to browser IndexedDB"""
-    messages_json = json.dumps(messages).replace("'", "\\'")
+    messages_json = json.dumps(messages)
+    # Escape for JavaScript
+    messages_json_escaped = messages_json.replace('\\', '\\\\').replace('`', '\\`').replace('$', '\\$')
+    
     save_script = f"""
-    <script>
-    (function() {{
-        const dbName = 'TalentScoutDB';
-        const storeName = 'conversations';
-        const messages = {messages_json};
-        
-        const request = indexedDB.open(dbName, 1);
-        
-        request.onsuccess = function(event) {{
-            const db = event.target.result;
-            const transaction = db.transaction([storeName], 'readwrite');
-            const objectStore = transaction.objectStore(storeName);
-            objectStore.put({{messages: messages, timestamp: new Date().toISOString()}}, 'current_conversation');
-        }};
-        
-        request.onupgradeneeded = function(event) {{
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains(storeName)) {{
-                db.createObjectStore(storeName);
-            }}
-        }};
-    }})();
-    </script>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <script>
+        (function() {{
+            const dbName = 'TalentScoutDB';
+            const storeName = 'conversations';
+            const messages = {messages_json};
+            
+            const request = indexedDB.open(dbName, 1);
+            
+            request.onsuccess = function(event) {{
+                const db = event.target.result;
+                const transaction = db.transaction([storeName], 'readwrite');
+                const objectStore = transaction.objectStore(storeName);
+                objectStore.put({{messages: messages, timestamp: new Date().toISOString()}}, 'current_conversation');
+                console.log('Saved', messages.length, 'messages to IndexedDB');
+                
+                // Also save to localStorage as backup
+                localStorage.setItem('talentscout_backup', JSON.stringify(messages));
+            }};
+            
+            request.onupgradeneeded = function(event) {{
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(storeName)) {{
+                    db.createObjectStore(storeName);
+                }}
+            }};
+        }})();
+        </script>
+    </body>
+    </html>
     """
     components.html(save_script, height=0)
 
@@ -522,22 +528,32 @@ def save_messages_to_indexeddb(messages):
 def clear_indexeddb():
     """Clear conversation history from IndexedDB"""
     clear_script = """
-    <script>
-    (function() {
-        const dbName = 'TalentScoutDB';
-        const storeName = 'conversations';
-        
-        const request = indexedDB.open(dbName, 1);
-        
-        request.onsuccess = function(event) {
-            const db = event.target.result;
-            const transaction = db.transaction([storeName], 'readwrite');
-            const objectStore = transaction.objectStore(storeName);
-            objectStore.delete('current_conversation');
-            console.log('Conversation history cleared from IndexedDB');
-        };
-    })();
-    </script>
+    <!DOCTYPE html>
+    <html>
+    <body>
+        <script>
+        (function() {
+            const dbName = 'TalentScoutDB';
+            const storeName = 'conversations';
+            
+            // Clear IndexedDB
+            const request = indexedDB.open(dbName, 1);
+            
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction([storeName], 'readwrite');
+                const objectStore = transaction.objectStore(storeName);
+                objectStore.delete('current_conversation');
+                console.log('Conversation history cleared from IndexedDB');
+            };
+            
+            // Also clear localStorage backup
+            localStorage.removeItem('talentscout_backup');
+            console.log('Conversation history cleared from localStorage');
+        })();
+        </script>
+    </body>
+    </html>
     """
     components.html(clear_script, height=0)
 
