@@ -793,10 +793,27 @@ def main():
     # Initialize
     initialize_session_state()
     
-    # Load messages from IndexedDB on first load
+    # Load messages from IndexedDB on first load using query params
+    query_params = st.query_params
+    
     if not st.session_state.indexeddb_checked:
-        load_messages_from_indexeddb()
+        # Try to load from IndexedDB
+        loaded_data = load_and_inject_messages()
         st.session_state.indexeddb_checked = True
+        
+        # Check if we have a load trigger from query params
+        if 'loaded' in query_params and len(st.session_state.messages) == 0:
+            try:
+                messages_param = query_params.get('loaded', '')
+                if messages_param:
+                    loaded_messages = json.loads(messages_param)
+                    if loaded_messages and isinstance(loaded_messages, list):
+                        st.session_state.messages = loaded_messages
+                        # Clear the query param
+                        st.query_params.clear()
+                        st.rerun()
+            except:
+                pass
     
     # Export buttons and New Chat in top right corner
     col1, col2, col3, col4 = st.columns([5, 1, 1, 1])
