@@ -513,14 +513,8 @@ def clear_indexeddb():
 
 
 def initialize_session_state():
-    """Initialize Streamlit session state with persistent storage"""
-    
-    # Load messages from file on first run
-    if 'messages_loaded' not in st.session_state:
-        st.session_state.messages_loaded = True
-        loaded_messages = load_messages_from_file()
-        st.session_state.messages = loaded_messages if loaded_messages else []
-    elif 'messages' not in st.session_state:
+    """Initialize Streamlit session state"""
+    if 'messages' not in st.session_state:
         st.session_state.messages = []
     
     if 'letta_connected' not in st.session_state:
@@ -537,6 +531,9 @@ def initialize_session_state():
     
     if 'agent_info' not in st.session_state:
         st.session_state.agent_info = None
+    
+    if 'indexeddb_checked' not in st.session_state:
+        st.session_state.indexeddb_checked = False
 
 
 def export_chat_as_txt():
