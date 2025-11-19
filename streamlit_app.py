@@ -747,7 +747,12 @@ def main():
     # Initialize
     initialize_session_state()
     
-    # Export buttons and Clear Chat in top right corner
+    # Load messages from IndexedDB on first load
+    if not st.session_state.indexeddb_checked:
+        load_messages_from_indexeddb()
+        st.session_state.indexeddb_checked = True
+    
+    # Export buttons and New Chat in top right corner
     col1, col2, col3, col4 = st.columns([5, 1, 1, 1])
     
     with col2:
@@ -775,11 +780,10 @@ def main():
                 )
     
     with col4:
-        if st.session_state.messages:
-            if st.button("🗑️ Clear", help="Clear chat history"):
-                st.session_state.messages = []
-                clear_session_file()
-                st.rerun()
+        if st.button("✨ New Chat", help="Start a new conversation"):
+            st.session_state.messages = []
+            clear_indexeddb()
+            st.rerun()
     
     # Header - Clean and Simple
     st.markdown(
