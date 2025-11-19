@@ -414,8 +414,11 @@ st.markdown("""
 
 
 def load_messages_from_indexeddb():
-    """Load messages from browser IndexedDB"""
+    """Load messages from browser IndexedDB and inject into hidden input"""
     load_script = """
+    <div id="indexeddb-loader" style="display:none;">
+        <input type="hidden" id="loaded-messages" value="" />
+    </div>
     <script>
     (function() {
         const dbName = 'TalentScoutDB';
@@ -426,7 +429,6 @@ def load_messages_from_indexeddb():
         
         request.onerror = function() {
             console.error('Failed to open IndexedDB');
-            window.parent.postMessage({type: 'indexeddb_loaded', messages: []}, '*');
         };
         
         request.onsuccess = function(event) {
@@ -437,12 +439,11 @@ def load_messages_from_indexeddb():
             
             getRequest.onsuccess = function() {
                 const data = getRequest.result;
-                const messages = data ? data.messages : [];
-                window.parent.postMessage({type: 'indexeddb_loaded', messages: messages}, '*');
-            };
-            
-            getRequest.onerror = function() {
-                window.parent.postMessage({type: 'indexeddb_loaded', messages: []}, '*');
+                if (data && data.messages && data.messages.length > 0) {
+                    // Store in sessionStorage for Streamlit to access
+                    sessionStorage.setItem('talentscout_messages', JSON.stringify(data.messages));
+                    console.log('Loaded', data.messages.length, 'messages from IndexedDB');
+                }
             };
         };
         
@@ -456,6 +457,35 @@ def load_messages_from_indexeddb():
     </script>
     """
     components.html(load_script, height=0)
+
+
+def check_loaded_messages():
+    """Check if messages were loaded from IndexedDB via sessionStorage"""
+    check_script = """
+    <script>
+    (function() {
+        const messages = sessionStorage.getItem('talentscout_messages');
+        if (messages) {
+            // Create a custom event to notify Streamlit
+            const event = new CustomEvent('messagesLoaded', { detail: messages });
+            window.dispatchEvent(event);
+            
+            // Clear from sessionStorage so we don't reload multiple times
+            sessionStorage.removeItem('talentscout_messages');
+            
+            // Try to pass data to parent
+            if (window.parent) {
+                window.parent.postMessage({
+                    type: 'streamlit:setComponentValue',
+                    value: messages
+                }, '*');
+            }
+        }
+    })();
+    </script>
+    """
+    result = components.html(check_script, height=0)
+    return result
 
 
 def save_messages_to_indexeddb(messages):
