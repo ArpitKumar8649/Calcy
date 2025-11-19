@@ -149,12 +149,12 @@ st.markdown("""
     
     /* User Message Styling */
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
-        background-color: #343541 !important;
+        background-color: #1a1a1a !important;
     }
     
     /* Assistant Message Styling */
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
-        background-color: #444654 !important;
+        background-color: #2a2a2a !important;
     }
     
     /* Chat Message Content */
