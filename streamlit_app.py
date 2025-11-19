@@ -391,8 +391,49 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+def load_messages_from_storage():
+    """Load messages from browser localStorage using JavaScript"""
+    load_script = """
+    <script>
+    // Get messages from localStorage
+    const messages = localStorage.getItem('talentscout_messages');
+    const messagesData = messages ? JSON.parse(messages) : [];
+    
+    // Send to Streamlit
+    window.parent.postMessage({
+        type: 'streamlit:setComponentValue',
+        data: messagesData
+    }, '*');
+    </script>
+    """
+    return html(load_script, height=0)
+
+
+def save_messages_to_storage(messages):
+    """Save messages to browser localStorage using JavaScript"""
+    messages_json = json.dumps(messages)
+    save_script = f"""
+    <script>
+    // Save messages to localStorage
+    const messages = {messages_json};
+    localStorage.setItem('talentscout_messages', JSON.stringify(messages));
+    </script>
+    """
+    html(save_script, height=0)
+
+
+def clear_storage():
+    """Clear messages from browser localStorage"""
+    clear_script = """
+    <script>
+    localStorage.removeItem('talentscout_messages');
+    </script>
+    """
+    html(clear_script, height=0)
+
+
 def initialize_session_state():
-    """Initialize Streamlit session state"""
+    """Initialize Streamlit session state with persistent storage"""
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
@@ -410,6 +451,13 @@ def initialize_session_state():
     
     if 'agent_info' not in st.session_state:
         st.session_state.agent_info = None
+    
+    if 'messages_loaded' not in st.session_state:
+        st.session_state.messages_loaded = False
+    
+    if 'storage_key' not in st.session_state:
+        # Generate unique storage key per session
+        st.session_state.storage_key = f"talentscout_{int(time.time())}"
 
 
 def export_chat_as_txt():
