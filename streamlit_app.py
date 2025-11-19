@@ -59,24 +59,21 @@ st.markdown("""
         letter-spacing: -0.3px;
     }
     
-    /* Typing Effect for TalentScout - Runs Once */
+    /* Typing Effect for TalentScout - Infinite Loop (Type → Erase → Repeat) */
     .typing-text {
         display: inline-block;
         overflow: hidden;
         border-right: 3px solid #10a37f;
         white-space: nowrap;
-        animation: typing 2s steps(12, end) 0.5s forwards,
-                   blink-caret 0.75s step-end 0s 3;
-        width: 0;
+        animation: typing 3s steps(12) infinite, blink-caret 0.75s step-end infinite;
     }
     
     @keyframes typing {
-        from {
+        0%, 100% {
             width: 0;
         }
-        to {
+        40%, 60% {
             width: 100%;
-            border-right-color: transparent;
         }
     }
     
