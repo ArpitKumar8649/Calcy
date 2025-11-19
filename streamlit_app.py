@@ -253,7 +253,7 @@ st.markdown("""
         align-items: center;
         gap: 0.75rem;
         padding: 1rem;
-        background: #444654;
+        background: #1a1a1a;
         border-radius: 8px;
         margin: 1rem 0;
         color: #9ca3af;
