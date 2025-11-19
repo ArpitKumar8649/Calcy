@@ -25,7 +25,7 @@ st.set_page_config(
     page_title=settings.app_title,
     page_icon=settings.app_icon,
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS - ChatGPT Style
