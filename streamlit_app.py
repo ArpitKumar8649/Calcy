@@ -49,7 +49,7 @@ st.markdown("""
         padding-top: 0 !important;
     }
     
-    /* Header Container - Responsive */
+    /* Header Container - Fixed at top */
     .main-header {
         font-size: clamp(1.25rem, 4vw, 2rem);
         font-weight: 600;
@@ -57,22 +57,29 @@ st.markdown("""
         padding: 1.5rem 1rem 1rem 1rem;
         color: #ececf1;
         letter-spacing: -0.3px;
+        position: sticky;
+        top: 0;
+        background: #343541;
+        z-index: 1000;
+        border-bottom: 1px solid #444654;
     }
     
-    /* Typing Effect for TalentScout - Infinite Loop (Type → Erase → Repeat) */
+    /* Typing Effect for TalentScout - Types once on load */
     .typing-text {
         display: inline-block;
         overflow: hidden;
         border-right: 3px solid #10a37f;
         white-space: nowrap;
-        animation: typing 3s steps(12) infinite, blink-caret 0.75s step-end infinite;
+        width: 0;
+        animation: typing 2s steps(12) 0.5s forwards, blink-caret 0.75s step-end infinite;
+        min-width: 180px; /* Reserve space to prevent layout shift */
     }
     
     @keyframes typing {
-        0%, 100% {
+        from {
             width: 0;
         }
-        40%, 60% {
+        to {
             width: 100%;
         }
     }
@@ -86,6 +93,12 @@ st.markdown("""
         }
     }
     
+    /* Stop cursor blinking after typing completes */
+    .typing-text.typed {
+        border-right-color: transparent;
+        animation: none;
+    }
+    
     /* Mobile responsive */
     @media (max-width: 768px) {
         .main-header {
@@ -95,6 +108,7 @@ st.markdown("""
         
         .typing-text {
             border-right-width: 2px;
+            min-width: 140px;
         }
     }
     
